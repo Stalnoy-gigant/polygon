@@ -1,0 +1,307 @@
+
+// первый алгоритм
+#include <iostream>
+#include <Windows.h>
+#include <cassert> // Для тестирования
+#include <vector>
+#include <algorithm> // Для генерации случайных данных
+#include <ctime>     // Для рандомизации
+using namespace std;
+
+template<typename T>
+void shuttleSort(T arr[], size_t n) {
+    for (size_t i = 1; i < n; i++) {
+        for (size_t j = i; j > 0 && arr[j] < arr[j - 1]; j--) {
+            T temp = arr[j];
+            arr[j] = arr[j - 1];// просто меняю местами очев
+            arr[j - 1] = temp;
+        }
+    }
+}
+
+
+bool isSorted(int arr[], int n) {// проверяю отсортирован ли или нет
+    for (int i = 1; i < n; i++) {
+        if (arr[i] < arr[i - 1]) {
+            return false;
+        }
+    }
+    return true;
+}
+
+// Функция для генерации массива
+void generateArray(int arr[], int n, int type) {
+    if (type == 1) { // Лучший случай: массив уже отсортирован
+        for (int i = 0; i < n; i++) {
+            arr[i] = i + 1;
+        }
+    }
+    else if (type == 2) { // Средний случай: случайный массив
+        for (int i = 0; i < n; i++) {
+            arr[i] = rand() % 1000; // Генерируем числа 
+        }
+    }
+    else if (type == 3) { // Худший случай: массив в обратном порядке
+        for (int i = 0; i < n; i++) {
+            arr[i] = n - i;
+        }
+    }
+}
+
+void runTests() {
+    const int SIZE = 100; // Размер массива
+    int arr[SIZE];
+
+    // Лучший случай
+    generateArray(arr, SIZE, 1);
+    shuttleSort(arr, SIZE);
+    assert(isSorted(arr, SIZE));
+    cout << "Тест лучшего случая прошел успешно!" << endl;
+
+    // Средний случай
+    generateArray(arr, SIZE, 2);
+    shuttleSort(arr, SIZE);
+    assert(isSorted(arr, SIZE));
+    cout << "Тест среднего случая прошел успешно!" << endl;
+
+    // Худший случай
+    generateArray(arr, SIZE, 3);
+    shuttleSort(arr, SIZE);
+    assert(isSorted(arr, SIZE));
+    cout << "Тест худшего случая прошел успешно!" << endl;
+}
+
+int main() {
+    setlocale(LC_ALL, "Russian");//для того чтобы я мог вывести по русски
+    srand(time(0)); // Инициализируем генератор случайных чисел
+    runTests();
+    cout << "Все тесты успешно пройдены!" << endl;
+    return 0;
+}
+
+// 2 Algoritm
+
+//// Функция для слияния двух подмассивов
+//void merge(vector<int>& arr, int left, int mid, int right) {
+//    int n1 = mid - left + 1;
+//    int n2 = right - mid;
+//
+//    // Временные массивы для левой и правой половины
+//    vector<int> L(n1), R(n2);
+//
+//    // Копируем данные в временные массивы L[] и R[]
+//    for (int i = 0; i < n1; i++) {
+//        L[i] = arr[left + i];
+//    }
+//    for (int j = 0; j < n2; j++) {
+//        R[j] = arr[mid + 1 + j];
+//    }
+//
+//    // Слияние 
+//    int i = 0; // Нач индекс для первого 
+//    int j = 0; // Нач индекс для второго 
+//    int k = left; // Нач индекс для слияния
+//
+//    while (i < n1 && j < n2) {
+//        if (L[i] <= R[j]) {
+//            arr[k] = L[i];
+//            i++;
+//        }
+//        else {
+//            arr[k] = R[j];
+//            j++;
+//        }
+//        k++;
+//    }
+//
+//    // Копируем оставшиеся элементы
+//    while (i < n1) {
+//        arr[k] = L[i];
+//        i++;
+//        k++;
+//    }
+//
+//    while (j < n2) {
+//        arr[k] = R[j];
+//        j++;
+//        k++;
+//    }
+//}
+//
+////рекурсивная функция сортировки Merge Sort
+//void mergeSort(vector<int>& arr, int left, int right) {
+//    if (left < right) {
+//        int mid = left + (right - left) / 2; // Вычисляем середину
+//
+//        // Рекурсивно сортируем 
+//        mergeSort(arr, left, mid);
+//        mergeSort(arr, mid + 1, right);
+//
+//        // Сливаем отсортированные 
+//        merge(arr, left, mid, right);
+//    }
+//}
+//
+//// Проверка, отсортирован ли массив
+//bool isSorted(const vector<int>& arr) {
+//    for (int i = 1; i < arr.size(); i++) {
+//        if (arr[i] < arr[i - 1]) {
+//            return false;
+//        }
+//    }
+//    return true;
+//}
+//
+//// Генерация лучшего
+//void generateBestCase(vector<int>& arr, int n) {
+//    for (int i = 0; i < n; i++) {
+//        arr[i] = i + 1; // Массив от 1 до N
+//    }
+//}
+//
+//// Генерация худшего
+//void generateWorstCase(vector<int>& arr, int n) {
+//    for (int i = 0; i < n; i++) {
+//        arr[i] = n - i; // Массив от N до 1
+//    }
+//}
+//
+//// Генерация среднего
+//void generateRandomCase(vector<int>& arr, int n) {
+//    for (int i = 0; i < n; i++) {
+//        arr[i] = rand() % 1000;
+//    }
+//}
+//
+//// Юнит-тесты для Merge Sort
+//void runTests() {
+//    const int SIZE = 1000000;// можно взять какой хотим
+//    vector<int> arr(SIZE);
+//
+//    // лучший
+//    generateBestCase(arr, SIZE);
+//    mergeSort(arr, 0, SIZE - 1);
+//    assert(isSorted(arr)); // Проверка, что массив отсортирован
+//    cout << "Тест лучшего случая прошел успешно!" << endl;
+//
+//    //средний
+//    generateRandomCase(arr, SIZE);
+//    mergeSort(arr, 0, SIZE - 1);
+//    assert(isSorted(arr));
+//    cout << "Тест среднего случая прошел успешно!" << endl;
+//
+//    //худший
+//    generateWorstCase(arr, SIZE);
+//    mergeSort(arr, 0, SIZE - 1);
+//    assert(isSorted(arr));
+//    cout << "Тест худшего случая прошел успешно!" << endl;
+//}
+//
+//int main() {
+//    setlocale(LC_ALL, "Russian");//для того чтобы я мог вывести по русски
+//    srand(time(0));
+//
+//
+//    runTests();
+//    cout << "Все тесты прошли успешно!" << endl;
+//
+//    return 0;
+//}
+//
+// 
+// 
+// 
+// 
+// 
+// 
+//3 algoritm
+// 
+// Counting Sort для чисел в пределах [0, maxValue]
+//void countingSort(vector<int>& arr, int maxValue) {
+//    vector<int> count(maxValue + 1, 0); // Массив частот
+//    vector<int> output(arr.size());    // массив для результата
+//
+//    // Подсчет количества вхождений
+//    for (int num : arr) {
+//        count[num]++;
+//    }
+//
+//   
+//    int index = 0;
+//    for (int i = 0; i <= maxValue; i++) {
+//        while (count[i] > 0) {
+//            output[index++] = i;
+//            count[i]--;
+//        }
+//    }
+//
+//    // Копирование результата в исходный массив
+//    arr = output;
+//}
+//
+//// Генерация массива для тестов
+//void generateArray(vector<int>& arr, int n, int maxValue) {
+//    for (int i = 0; i < n; i++) {
+//        arr[i] = rand() % (maxValue + 1); // Случайные числа от 0 до maxValue
+//    }
+//}
+//
+//// Проверка, отсортирован ли массив
+//bool isSorted(const vector<int>& arr) {
+//    for (int i = 1; i < arr.size(); i++) {
+//        if (arr[i] < arr[i - 1]) {
+//            return false;
+//        }
+//    }
+//    return true;
+//}
+//
+//// Юнит-тесты
+//void runTests() {
+//    vector<int> arr;
+//
+//    // Легкий случай: небольшой массив, большой диапазон значений
+//    arr.resize(10); // Массив из 10 элементов
+//    generateArray(arr, 10, 1000); // Диапазон значений [0, 1000]
+//    countingSort(arr, 1000);
+//    assert(isSorted(arr));
+//    cout << "Тест легкого случая пройден успешно!" << endl;
+//
+//    size_t size = 1000;
+//    // Средний случай: массив и диапазон значений сопоставимы
+//    arr.resize(size); // Массив из 1000 элементов
+//    generateArray(arr, size, 2000); // Диапазон значений [0, 2000]
+//    countingSort(arr, 2000);
+//    assert(isSorted(arr));
+//    cout << "Тест среднего случая пройден успешно!" << endl;
+//
+//    // Сложный случай: большой массив, небольшой диапазон значений
+//    arr.resize(1000000); // Массив из 1 000 000 элементов
+//    generateArray(arr, 1000000, 10000); // Диапазон значений [0, 10000]
+//    countingSort(arr, 10000);
+//    assert(isSorted(arr));
+//    cout << "Тест сложного случая пройден успешно!" << endl;
+//}
+//
+//int main() {
+//    setlocale(LC_ALL, "Russian");//для того чтобы я мог вывести по русски
+//    srand(time(0)); // Инициализация случ чисел
+//
+//    // Запуск тестов
+//    runTests();
+//    cout << "Все тесты прошли успешно!" << endl;
+//
+//    return 0;
+//}
+
+
+
+
+
+
+
+
+
+
+
+
