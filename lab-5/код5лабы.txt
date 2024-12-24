@@ -75,7 +75,7 @@ int main() {
     setlocale(LC_ALL, "Russian");//для того чтобы я мог вывести по русски
     srand(time(0)); // Инициализируем генератор случайных чисел
     runTests();
-    cout << "Все тесты успешно пройдены!" << endl;
+    cout << "Все тесты для Shuttle sort успешно пройдены!" << endl;
     return 0;
 }
 
@@ -203,7 +203,7 @@ int main() {
 //
 //
 //    runTests();
-//    cout << "Все тесты прошли успешно!" << endl;
+//    cout << "Все тесты для mergeSort прошли успешно!" << endl;
 //
 //    return 0;
 //}

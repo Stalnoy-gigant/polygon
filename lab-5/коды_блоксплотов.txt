@@ -1,0 +1,323 @@
+#include <iostream>
+#include <Windows.h>
+#include <cassert>
+#include <vector>
+#include <algorithm>
+#include <ctime>
+#include <chrono> // Для измерения времени
+#include <fstream> // Для сохранения данных
+
+using namespace std;
+//первый боксплот 
+/* template<typename T>
+void shuttleSort(T arr[], size_t n) {
+    for (size_t i = 1; i < n; i++) {
+        for (size_t j = i; j > 0 && arr[j] < arr[j - 1]; j--) {
+            T temp = arr[j];
+            arr[j] = arr[j - 1];
+            arr[j - 1] = temp;
+        }
+    }
+}
+
+// Проверка отсортированности
+bool isSorted(int arr[], int n) {
+    for (int i = 1; i < n; i++) {
+        if (arr[i] < arr[i - 1]) {
+            return false;
+        }
+    }
+    return true;
+}
+
+// Генерация массива
+void generateArray(int arr[], int n, int type) {
+    if (type == 1) { // Лучший случай
+        for (int i = 0; i < n; i++) {
+            arr[i] = i + 1;
+        }
+    }
+    else if (type == 2) { // Средний случай
+        for (int i = 0; i < n; i++) {
+            arr[i] = rand() % 1000;
+        }
+    }
+    else if (type == 3) { // Худший случай
+        for (int i = 0; i < n; i++) {
+            arr[i] = n - i;
+        }
+    }
+}
+
+// Измерение времени работы сортировки
+void measurePerformance() {
+    ofstream outFile("performance_data.csv");
+    outFile << "Size,BestCase,AverageCase,WorstCase\n";
+
+    for (int size = 1000; size <= 100000; size += 1000) {
+        int* arr = new int[size];
+
+        // Лучший случай
+        generateArray(arr, size, 1);
+        auto start = chrono::high_resolution_clock::now();
+        shuttleSort(arr, size);
+        auto end = chrono::high_resolution_clock::now();
+        double bestTime = chrono::duration<double, milli>(end - start).count();
+
+        // Средний случай
+        generateArray(arr, size, 2);
+        start = chrono::high_resolution_clock::now();
+        shuttleSort(arr, size);
+        end = chrono::high_resolution_clock::now();
+        double avgTime = chrono::duration<double, milli>(end - start).count();
+
+        // Худший случай
+        generateArray(arr, size, 3);
+        start = chrono::high_resolution_clock::now();
+        shuttleSort(arr, size);
+        end = chrono::high_resolution_clock::now();
+        double worstTime = chrono::duration<double, milli>(end - start).count();
+
+        // Сохранение данных
+        outFile << size << "," << bestTime << "," << avgTime << "," << worstTime << "\n";
+
+        delete[] arr;
+        cout << "Size: " << size << " completed.\n";
+    }
+
+    outFile.close();
+    cout << "Performance data saved to 'performance_data.csv'.\n";
+}
+
+int main() {
+    setlocale(LC_ALL, "Russian");
+    srand(time(0));
+
+    cout << "Измерение производительности...\n";
+    measurePerformance();
+
+    cout << "Все данные успешно сохранены!\n";
+    return 0;
+}
+
+//второй боксплот
+#include <iostream>
+#include <vector>
+#include <fstream>
+#include <cassert>
+#include <chrono>
+#include <cstdlib>
+
+using namespace std;
+
+// Merge two subarrays
+void merge(vector<int>& arr, int left, int mid, int right) {
+    int n1 = mid - left + 1;
+    int n2 = right - mid;
+
+    vector<int> L(n1), R(n2);
+
+    for (int i = 0; i < n1; i++)
+        L[i] = arr[left + i];
+    for (int j = 0; j < n2; j++)
+        R[j] = arr[mid + 1 + j];
+
+    int i = 0, j = 0, k = left;
+    while (i < n1 && j < n2) {
+        if (L[i] <= R[j]) {
+            arr[k] = L[i];
+            i++;
+        }
+        else {
+            arr[k] = R[j];
+            j++;
+        }
+        k++;
+    }
+
+    while (i < n1) {
+        arr[k] = L[i];
+        i++;
+        k++;
+    }
+
+    while (j < n2) {
+        arr[k] = R[j];
+        j++;
+        k++;
+    }
+}
+
+// Merge Sort function
+void mergeSort(vector<int>& arr, int left, int right) {
+    if (left < right) {
+        int mid = left + (right - left) / 2;
+
+        mergeSort(arr, left, mid);
+        mergeSort(arr, mid + 1, right);
+
+        merge(arr, left, mid, right);
+    }
+}
+
+// Generate test arrays
+void generateArray(vector<int>& arr, int n, int type) {
+    if (type == 1) {
+        for (int i = 0; i < n; i++)
+            arr[i] = i + 1;
+    }
+    else if (type == 2) {
+        for (int i = 0; i < n; i++)
+            arr[i] = rand() % 1000;
+    }
+    else if (type == 3) {
+        for (int i = 0; i < n; i++)
+            arr[i] = n - i;
+    }
+}
+
+// Measure Merge Sort performance
+void measurePerformance() {
+    ofstream outFile("merge_sort_performance.csv");
+    outFile << "Size,BestCase,AverageCase,WorstCase\n";
+
+    for (int size = 1000; size <= 100000; size += 1000) {
+        vector<int> arr(size);
+
+        // Best case
+        generateArray(arr, size, 1);
+        auto start = chrono::high_resolution_clock::now();
+        mergeSort(arr, 0, size - 1);
+        auto end = chrono::high_resolution_clock::now();
+        double bestTime = chrono::duration<double, milli>(end - start).count();
+
+        // Average case
+        generateArray(arr, size, 2);
+        start = chrono::high_resolution_clock::now();
+        mergeSort(arr, 0, size - 1);
+        end = chrono::high_resolution_clock::now();
+        double avgTime = chrono::duration<double, milli>(end - start).count();
+
+        // Worst case
+        generateArray(arr, size, 3);
+        start = chrono::high_resolution_clock::now();
+        mergeSort(arr, 0, size - 1);
+        end = chrono::high_resolution_clock::now();
+        double worstTime = chrono::duration<double, milli>(end - start).count();
+
+        // Save results
+        outFile << size << "," << bestTime << "," << avgTime << "," << worstTime << "\n";
+
+        cout << "Size: " << size << " completed.\n";
+    }
+
+    outFile.close();
+    cout << "Performance data saved to 'merge_sort_performance.csv'.\n";
+}
+
+int main() {
+    setlocale(LC_ALL, "Russian");
+    srand(time(0));
+
+    cout << "Измерение производительности Merge Sort...\n";
+    measurePerformance();
+
+    cout << "Все данные успешно сохранены!\n";
+    return 0;
+}
+
+
+
+
+// третий блоксплот
+// Counting Sort для чисел в пределах [0, maxValue]
+void countingSort(vector<int>& arr, int maxValue) {
+    vector<int> count(maxValue + 1, 0); // Массив частот
+    vector<int> output(arr.size());    // Массив для результата
+
+    // Подсчет количества вхождений
+    for (int num : arr) {
+        count[num]++;
+    }
+
+    // Копирование отсортированных значений в выходной массив
+    int index = 0;
+    for (int i = 0; i <= maxValue; i++) {
+        while (count[i] > 0) {
+            output[index++] = i;
+            count[i]--;
+        }
+    }
+
+    // Копирование результата в исходный массив
+    arr = output;
+}
+
+// Генерация массива для тестов
+void generateArray(vector<int>& arr, int n, int maxValue, int type) {
+    if (type == 1) { // Лучший случай (отсортированный массив)
+        for (int i = 0; i < n; i++) {
+            arr[i] = i % (maxValue + 1);
+        }
+    } else if (type == 2) { // Средний случай (случайные значения)
+        for (int i = 0; i < n; i++) {
+            arr[i] = rand() % (maxValue + 1);
+        }
+    } else if (type == 3) { // Худший случай (обратный порядок)
+        for (int i = 0; i < n; i++) {
+            arr[i] = (maxValue - (i % (maxValue + 1)));
+        }
+    }
+}
+
+// Измерение времени работы Counting Sort
+void measurePerformance() {
+    ofstream outFile("counting_sort_performance.csv");
+    outFile << "Size,BestCase,AverageCase,WorstCase\n";
+
+    const int maxValue = 1000; // Максимальное значение для чисел
+
+    for (int size = 1000; size <= 100000; size += 1000) {
+        vector<int> arr(size);
+
+        // Лучший случай
+        generateArray(arr, size, maxValue, 1);
+        auto start = chrono::high_resolution_clock::now();
+        countingSort(arr, maxValue);
+        auto end = chrono::high_resolution_clock::now();
+        double bestTime = chrono::duration<double, milli>(end - start).count();
+
+        // Средний случай
+        generateArray(arr, size, maxValue, 2);
+        start = chrono::high_resolution_clock::now();
+        countingSort(arr, maxValue);
+        end = chrono::high_resolution_clock::now();
+        double avgTime = chrono::duration<double, milli>(end - start).count();
+
+        // Худший случай
+        generateArray(arr, size, maxValue, 3);
+        start = chrono::high_resolution_clock::now();
+        countingSort(arr, maxValue);
+        end = chrono::high_resolution_clock::now();
+        double worstTime = chrono::duration<double, milli>(end - start).count();
+
+        // Сохранение данных
+        outFile << size << "," << bestTime << "," << avgTime << "," << worstTime << "\n";
+
+        cout << "Size: " << size << " completed.\n";
+    }
+
+    outFile.close();
+    cout << "Performance data saved to 'counting_sort_performance.csv'.\n";
+}
+
+int main() {
+    setlocale(LC_ALL, "Russian");
+    srand(time(0));
+
+    cout << "Измерение производительности Counting Sort...\n";
+    measurePerformance();
+
+    cout << "Все данные успешно сохранены!\n";
+    return 0;
+}
