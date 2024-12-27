@@ -1,0 +1,16 @@
+class Solution {
+public:
+    int shortestSequence(vector<int>& rolls, int k) {
+        unordered_set<int> s; // 4 * k байт
+        int ans = 1;
+        // O(N)
+        for (int v : rolls) { 
+            s.insert(v); // O(1)
+            if (s.size() == k) {
+                s.clear(); // O(1)
+                ++ans;
+            }
+        }
+        return ans;
+    }
+};
