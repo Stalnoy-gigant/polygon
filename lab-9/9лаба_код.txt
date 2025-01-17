@@ -1,0 +1,57 @@
+
+#include <iostream>
+#include <vector>
+#include <unordered_map>
+#include <algorithm> // Для sort
+using namespace std;
+
+int main() {
+    setlocale(LC_ALL, "Russian");//для того чтобы я мог вывести по русски
+    int n;
+    cout << "Введите количество элементов в массиве: ";
+    cin >> n;
+
+    vector<int> arr(n);
+    cout << "Введите элементы массива: ";
+    for (int& num : arr) {
+        cin >> num;
+    }
+
+    unordered_map<int, int> freq;
+    for (int num : arr) {
+        freq[num]++;
+    }
+    cout << "Числа, встречающиеся чётное количество раз: ";
+    for (int num : arr) {
+        if (freq[num] % 2 == 0) {
+            cout << num << " ";
+        }
+    }
+
+    return 0;
+}
+
+
+// для более красивого вывода 
+
+
+//// Сбор чисел, встречающихся чётное количество раз
+//vector<int> evNumb;
+//for (const auto& [num, count] : freq) {
+//    if (count % 2 == 0) {
+//        evNum.push_back(num);
+//    }
+//}
+//
+//// Сортировка чисел по возрастанию
+//sort(evNum.begin(), evNum.end());
+//
+//cout << "Числа, встречающиеся чётное количество раз (в порядке возрастания): ";
+//if (!evNum.empty()) {
+//    for (int num : evNum) {
+//        cout << num << " ";
+//    }
+//}
+//else {
+//    cout << "Нет таких чисел.";
+//}
