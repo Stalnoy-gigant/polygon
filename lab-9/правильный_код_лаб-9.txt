@@ -1,0 +1,12 @@
+import numpy as np
+
+# Исходный массив  пользователь может вводить любой
+array = np.array([1, 1, 2, 3, 3, 3])
+
+# Уникальные значения и их количество в массиве
+unique, counts = np.unique(array, return_counts=True)
+
+# Отбор чисел, встречающихся чётное количество раз
+ev_occurr = unique[counts % 2 == 0]
+result = array[np.isin(array, ev_occurr)]
+print(result)
